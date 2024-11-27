@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int      @id @default(autoincrement()) // Usando auto incremento para o ID
+  name              String
+  email             String   @unique
+  password          String
+  registroAcademico String?  // Adicionando o campo 'registroAcademico'
+  accessId          String?
+  access            Access?  @relation(fields: [accessId], references: [id]) // Relacionamento com o modelo Access
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  authoredEvents    Event[]  // Relacionamento com múltiplos eventos que o usuário criou
+  // attendances       Attendance[] // Relacionamento com múltiplas inscrições (comentado, se necessário)
+}
+
+model Access {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  user       User[]   // Relacionamento com múltiplos usuários
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Event {
+  id         Int       @id @default(autoincrement()) // ID numérico auto-incrementado
+  title      String
+  content    String?
+  data       DateTime
+  location   String?
+  authorId   Int       // Alterado para 'Int' para corresponder ao tipo de 'id' em User
+  author     User      @relation(fields: [authorId], references: [id]) // Relacionamento com User
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+}
+
+// model Attendance {
+//   id         String   @id @default(uuid())  // ID único da inscrição
+//   name       String   // Nome da inscrição
+//   event      Event    @relation(fields: [eventId], references: [id])  // Relacionamento com Event
+//   eventId    String   // Chave estrangeira para o evento
+//   created_at DateTime @default(now())  // Data de criação
+//   updated_at DateTime @updatedAt  // Data de atualização
+//   User       User?    @relation(fields: [userId], references: [id]) // Relacionamento com User (opcional)
+//   userId     String?  // Chave estrangeira para o usuário (opcional)
+// }
