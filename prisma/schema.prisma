@@ -8,35 +8,35 @@ datasource db {
 }
 
 model User {
-  id                Int      @id @default(autoincrement()) // Usando auto incremento para o ID
+  id                Int      @id @default(autoincrement()) 
   name              String
   email             String   @unique
   password          String
-  registroAcademico String?  // Adicionando o campo 'registroAcademico'
+  registroAcademico String?  
   accessId          String?
-  access            Access?  @relation(fields: [accessId], references: [id]) // Relacionamento com o modelo Access
+  access            Access?  @relation(fields: [accessId], references: [id]) 
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
-  authoredEvents    Event[]  // Relacionamento com múltiplos eventos que o usuário criou
+  authoredEvents    Event[]  
   // attendances       Attendance[] // Relacionamento com múltiplas inscrições (comentado, se necessário)
 }
 
 model Access {
   id         String   @id @default(uuid())
   name       String   @unique
-  user       User[]   // Relacionamento com múltiplos usuários
+  user       User[]   
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 model Event {
-  id         Int       @id @default(autoincrement()) // ID numérico auto-incrementado
+  id         Int       @id @default(autoincrement()) 
   title      String
   content    String?
   data       DateTime
   location   String?
-  authorId   Int       // Alterado para 'Int' para corresponder ao tipo de 'id' em User
-  author     User      @relation(fields: [authorId], references: [id]) // Relacionamento com User
+  authorId   Int       
+  author     User      @relation(fields: [authorId], references: [id]) 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 }
